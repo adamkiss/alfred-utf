@@ -21,7 +21,7 @@ select JSON_OBJECT(
 		JSON_OBJECT(
 			'uid', hex,
 			'variables', JSON_OBJECT('hex', hex),
-			'title', character,
+			'title', character || "   (" || count || "⨉)",
 			'subtitle', name || " (" || category || ")",
 			'icon', JSON_OBJECT('path', 'icon.png'),
 			'arg', character,
