@@ -12,7 +12,17 @@
 		<array>
 			<dict>
 				<key>destinationuid</key>
-				<string>E144816E-4B9C-481C-AE1A-1EB38DB193ED</string>
+				<string>5E7B0A6F-E454-4658-BB2C-A08DBF7549BE</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+			<dict>
+				<key>destinationuid</key>
+				<string>659AFAAA-C4C2-45F7-867F-3B7566D42B0E</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -60,23 +70,60 @@
 				<key>runningsubtext</key>
 				<string></string>
 				<key>script</key>
-				<string># trim and collapse whitespace - source: https://stackoverflow.com/a/40962059
+				<string>#!/usr/bin/env zsh
+
+# trim and collapse whitespace - source: https://stackoverflow.com/a/40962059
 query=`echo $1 | xargs`
 
 # if query contains ':', it's full fts5 query
-# otherwise, do some prep work
-# namely:
-#	prepend the column name "name: "
-#	append asterisk after every word
+# otherwise, change multiple groups into asterisk'd AND query
+# 'right arr' =&gt; 'right* AND arr*'
 raw=":"
 if test "${query#*$raw}" = "$query"
 then
-	query="name: ${query// /* }*"
+	query="${query// /* AND }*"
 else
 	query="$query"
 fi
 
-echo $query</string>
+/usr/bin/sqlite3 unicode.sqlite3 &lt;&lt;EOF
+ATTACH "./user.sqlite3" as user;
+-- the query
+WITH found AS (
+	SELECT character, name, category, hex, html, json, user.usage.count
+	FROM main.characters('$query')
+	LEFT JOIN user.usage ON main.characters.hex = user.usage.id
+	ORDER BY user.usage.count DESC, rank ASC, length(name) ASC
+	LIMIT 50
+)
+-- the formatter
+select JSON_OBJECT(
+	'items', JSON_GROUP_ARRAY(
+		JSON_OBJECT(
+			'uid', hex,
+			'variables', JSON_OBJECT('hex', hex),
+			'title', character,
+			'subtitle', name || " (" || category || ")",
+			'icon', JSON_OBJECT('path', 'icon.png'),
+			'arg', character,
+			'mods', JSON_OBJECT(
+				'cmd', JSON_OBJECT(
+					'arg', html,
+					'subtitle', 'Copy &amp; paste as HTML'
+				),
+				'option', JSON_OBJECT(
+					'arg', json,
+					'subtitle', 'Copy &amp; paste as JS/Python/…'
+				),
+				'ctrl', JSON_OBJECT(
+					'arg', hex,
+					'subtitle', 'Copy &amp; paste as Decimal value'
+				)
+			)
+		)
+	)
+) FROM found;
+EOF</string>
 				<key>scriptargtype</key>
 				<integer>1</integer>
 				<key>scriptfile</key>
@@ -100,23 +147,50 @@ echo $query</string>
 		<dict>
 			<key>config</key>
 			<dict>
-				<key>lastpathcomponent</key>
-				<false/>
-				<key>onlyshowifquerypopulated</key>
-				<false/>
-				<key>removeextension</key>
-				<false/>
-				<key>text</key>
+				<key>autopaste</key>
+				<true/>
+				<key>clipboardtext</key>
 				<string>{query}</string>
-				<key>title</key>
-				<string>Oi</string>
+				<key>ignoredynamicplaceholders</key>
+				<false/>
+				<key>transient</key>
+				<false/>
 			</dict>
 			<key>type</key>
-			<string>alfred.workflow.output.notification</string>
+			<string>alfred.workflow.output.clipboard</string>
 			<key>uid</key>
-			<string>E144816E-4B9C-481C-AE1A-1EB38DB193ED</string>
+			<string>5E7B0A6F-E454-4658-BB2C-A08DBF7549BE</string>
 			<key>version</key>
-			<integer>1</integer>
+			<integer>3</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>concurrently</key>
+				<false/>
+				<key>escaping</key>
+				<integer>102</integer>
+				<key>script</key>
+				<string># Create the usage table if it doesn't exist
+if ! [[ -f usage.sqlite3 ]]; then
+    echo 'CREATE TABLE "usage" ("id" string UNIQUE NOT NULL,"count" integer NOT NULL DEFAULT 1, PRIMARY KEY (id));' | sqlite3 user.sqlite3
+fi
+
+# Upsert the HEX value count
+echo "INSERT INTO usage(id) VALUES($hex) ON CONFLICT(id) DO UPDATE SET count=count+1;" | sqlite3 user.sqlite3</string>
+				<key>scriptargtype</key>
+				<integer>1</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>type</key>
+				<integer>5</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>659AFAAA-C4C2-45F7-867F-3B7566D42B0E</string>
+			<key>version</key>
+			<integer>2</integer>
 		</dict>
 	</array>
 	<key>readme</key>
@@ -127,19 +201,30 @@ Alfred 3 now supports JSON, which is the recommended format. XML is also support
 A new option now exists for Script Filters, "Alfred filters results". This allows you to return a whole list of results, let Alfred do the subsequent filtering with extreme performance. When this option is selected, your script will be called once with no argument.</string>
 	<key>uidata</key>
 	<dict>
+		<key>5E7B0A6F-E454-4658-BB2C-A08DBF7549BE</key>
+		<dict>
+			<key>note</key>
+			<string>COPY / PASTE</string>
+			<key>xpos</key>
+			<real>415</real>
+			<key>ypos</key>
+			<real>45</real>
+		</dict>
+		<key>659AFAAA-C4C2-45F7-867F-3B7566D42B0E</key>
+		<dict>
+			<key>note</key>
+			<string>COUNT USAGE</string>
+			<key>xpos</key>
+			<real>415</real>
+			<key>ypos</key>
+			<real>185</real>
+		</dict>
 		<key>682E59B1-A662-4A7A-B712-39E3D502E4F4</key>
 		<dict>
 			<key>xpos</key>
-			<real>130</real>
+			<real>45</real>
 			<key>ypos</key>
-			<real>245</real>
-		</dict>
-		<key>E144816E-4B9C-481C-AE1A-1EB38DB193ED</key>
-		<dict>
-			<key>xpos</key>
-			<real>475</real>
-			<key>ypos</key>
-			<real>245</real>
+			<real>45</real>
 		</dict>
 	</dict>
 	<key>userconfigurationconfig</key>

@@ -29,6 +29,7 @@ select JSON_OBJECT(
 	'items', JSON_GROUP_ARRAY(
 		JSON_OBJECT(
 			'uid', hex,
+			'variables', JSON_OBJECT('hex', hex),
 			'title', character,
 			'subtitle', name || " (" || category || ")",
 			'icon', JSON_OBJECT('path', 'icon.png'),
