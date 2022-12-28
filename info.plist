@@ -30,6 +30,49 @@
 				<key>vitoclose</key>
 				<false/>
 			</dict>
+			<dict>
+				<key>destinationuid</key>
+				<string>D028B37E-807C-458A-8FE7-27AB283839AC</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>7DF89816-12DA-4CDA-94E6-9998DD052287</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>5E7B0A6F-E454-4658-BB2C-A08DBF7549BE</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+			<dict>
+				<key>destinationuid</key>
+				<string>659AFAAA-C4C2-45F7-867F-3B7566D42B0E</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+			<dict>
+				<key>destinationuid</key>
+				<string>D028B37E-807C-458A-8FE7-27AB283839AC</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
 		</array>
 	</dict>
 	<key>createdby</key>
@@ -166,18 +209,111 @@ EOF</string>
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>alfredfiltersresults</key>
+				<false/>
+				<key>alfredfiltersresultsmatchmode</key>
+				<integer>0</integer>
+				<key>argumenttreatemptyqueryasnil</key>
+				<true/>
+				<key>argumenttrimmode</key>
+				<integer>0</integer>
+				<key>argumenttype</key>
+				<integer>2</integer>
+				<key>escaping</key>
+				<integer>102</integer>
+				<key>keyword</key>
+				<string>utf10</string>
+				<key>queuedelaycustom</key>
+				<integer>3</integer>
+				<key>queuedelayimmediatelyinitially</key>
+				<true/>
+				<key>queuedelaymode</key>
+				<integer>0</integer>
+				<key>queuemode</key>
+				<integer>1</integer>
+				<key>runningsubtext</key>
+				<string></string>
+				<key>script</key>
+				<string>#!/usr/bin/env zsh
+
+# Create the usage table if it doesn't exist
+if ! [[ -f user.sqlite3 ]]; then
+    echo 'CREATE TABLE "usage" ("id" string UNIQUE NOT NULL,"count" integer NOT NULL DEFAULT 1, PRIMARY KEY (id));' | sqlite3 user.sqlite3
+fi
+
+/usr/bin/sqlite3 user.sqlite3 &lt;&lt;EOF
+ATTACH "./unicode.sqlite3" as u;
+-- the query
+WITH top10 AS (
+	SELECT id, count, hex, character, name, category, html, json
+	FROM main.usage
+	LEFT JOIN u.characters ON usage.id = characters.hex
+	ORDER BY count DESC
+	LIMIT 10
+)
+-- the formatter
+select JSON_OBJECT(
+	'items', JSON_GROUP_ARRAY(
+		JSON_OBJECT(
+			'uid', hex,
+			'variables', JSON_OBJECT('hex', hex),
+			'title', character || "   (" || count || "⨉)",
+			'subtitle', name || " (" || category || ")",
+			'icon', JSON_OBJECT('path', 'icon.png'),
+			'arg', character,
+			'mods', JSON_OBJECT(
+				'cmd', JSON_OBJECT(
+					'arg', html,
+					'subtitle', 'Copy &amp; paste as HTML'
+				),
+				'option', JSON_OBJECT(
+					'arg', json,
+					'subtitle', 'Copy &amp; paste as JS/Python/…'
+				),
+				'ctrl', JSON_OBJECT(
+					'arg', hex,
+					'subtitle', 'Copy &amp; paste as Decimal value'
+				)
+			)
+		)
+	)
+) FROM top10;
+EOF</string>
+				<key>scriptargtype</key>
+				<integer>1</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>subtext</key>
+				<string></string>
+				<key>title</key>
+				<string>UTF: Top 10 used characters</string>
+				<key>type</key>
+				<integer>5</integer>
+				<key>withspace</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.scriptfilter</string>
+			<key>uid</key>
+			<string>7DF89816-12DA-4CDA-94E6-9998DD052287</string>
+			<key>version</key>
+			<integer>3</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
 				<key>concurrently</key>
 				<false/>
 				<key>escaping</key>
 				<integer>102</integer>
 				<key>script</key>
 				<string># Create the usage table if it doesn't exist
-if ! [[ -f usage.sqlite3 ]]; then
-    echo 'CREATE TABLE "usage" ("id" string UNIQUE NOT NULL,"count" integer NOT NULL DEFAULT 1, PRIMARY KEY (id));' | sqlite3 user.sqlite3
+if ! [[ -f user.sqlite3 ]]; then
+    echo 'CREATE TABLE "usage" ("id" string UNIQUE NOT NULL,"count" integer NOT NULL DEFAULT 1, PRIMARY KEY (id));' | /usr/bin/sqlite3 user.sqlite3
 fi
 
 # Upsert the HEX value count
-echo "INSERT INTO usage(id) VALUES($hex) ON CONFLICT(id) DO UPDATE SET count=count+1;" | sqlite3 user.sqlite3</string>
+echo "INSERT INTO usage(id) VALUES('$hex') ON CONFLICT(id) DO UPDATE SET count=count+1;" | /usr/bin/sqlite3 user.sqlite3</string>
 				<key>scriptargtype</key>
 				<integer>1</integer>
 				<key>scriptfile</key>
@@ -191,6 +327,23 @@ echo "INSERT INTO usage(id) VALUES($hex) ON CONFLICT(id) DO UPDATE SET count=cou
 			<string>659AFAAA-C4C2-45F7-867F-3B7566D42B0E</string>
 			<key>version</key>
 			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argument</key>
+				<string>'{query}', {variables}</string>
+				<key>cleardebuggertext</key>
+				<false/>
+				<key>processoutputs</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.utility.debug</string>
+			<key>uid</key>
+			<string>D028B37E-807C-458A-8FE7-27AB283839AC</string>
+			<key>version</key>
+			<integer>1</integer>
 		</dict>
 	</array>
 	<key>readme</key>
@@ -226,11 +379,25 @@ A new option now exists for Script Filters, "Alfred filters results". This allow
 			<key>ypos</key>
 			<real>45</real>
 		</dict>
+		<key>7DF89816-12DA-4CDA-94E6-9998DD052287</key>
+		<dict>
+			<key>xpos</key>
+			<real>45</real>
+			<key>ypos</key>
+			<real>185</real>
+		</dict>
+		<key>D028B37E-807C-458A-8FE7-27AB283839AC</key>
+		<dict>
+			<key>xpos</key>
+			<real>415</real>
+			<key>ypos</key>
+			<real>375</real>
+		</dict>
 	</dict>
 	<key>userconfigurationconfig</key>
 	<array/>
 	<key>version</key>
-	<string>1.0</string>
+	<string>2.0.0</string>
 	<key>webaddress</key>
 	<string>https://adamkiss.com</string>
 </dict>
