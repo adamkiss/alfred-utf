@@ -11,7 +11,7 @@ if test "${query#*$raw}" = "$query"
 then
 	query="${query// /* AND }*"
 else
-	query="$query"
+	query="${query#*$raw}"
 fi
 
 /usr/bin/sqlite3 unicode.sqlite3 <<EOF
