@@ -2,7 +2,7 @@
 
 # wrap argument "cat" as "category:$cat" and return formatted characters from the category
 function uni_category -a cat
-    ./uni print category:$cat -c -f "('%(char)', '%(name)', '%(cat)', '%(hex)', '%(keysym)'),"
+    ./uni print category:$cat -c -f "('%(char)', LOWER('%(name)'), '%(cat)', '%(hex)', '%(keysym)'),"
 end
 
 # join the results of (uni_category $cat) and trim trailing ','
