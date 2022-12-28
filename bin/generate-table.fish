@@ -35,4 +35,4 @@ $(insert_into_characters Z)
 /usr/bin/sqlite3 unicode.sqlite3 < generate-table.sql
 
 # remove the file
-# rm generate-table.sql
+rm generate-table.sql
