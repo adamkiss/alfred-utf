@@ -19,7 +19,7 @@ ATTACH "./user.sqlite3" as user;
 -- the query
 WITH found AS (
 	SELECT character, name, category, hex, html, json, user.usage.count
-	FROM main.characters('2192')
+	FROM main.characters('$query')
 	LEFT JOIN user.usage ON main.characters.hex = user.usage.id
 	ORDER BY user.usage.count DESC, rank ASC, length(name) ASC
 	LIMIT 50
