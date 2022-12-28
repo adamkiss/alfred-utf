@@ -31,7 +31,7 @@ select JSON_OBJECT(
 			'uid', hex,
 			'variables', JSON_OBJECT('hex', hex),
 			'title', character,
-			'subtitle', name || " (" || category || ")",
+			'subtitle', name || " (" || category || IIF(count > 0, ", " || count, '') || ")",
 			'icon', JSON_OBJECT('path', 'icon.png'),
 			'arg', character,
 			'mods', JSON_OBJECT(

@@ -6,7 +6,7 @@
         {
             "label": "Run the main function",
             "type": "shell",
-            "command": "zsh ./bin/test-main.zsh 'right arrow'",
+            "command": "zsh ./bin/test-main.zsh ':rarr* OR times*' | jq",
             "problemMatcher": [],
             "group": {
                 "kind": "test",
