@@ -1,4 +1,4 @@
-# <img src="https://user-images.githubusercontent.com/481362/209873324-855bb383-5998-4377-90ee-5bee67d5cc79.png" width="40" height="40"/> Alfred-uni ![Version badge](https://shields.io/github/v/release/adamkiss/alfred-utf?display_name=tag&include_prereleases&sort=semver)
+# <img src="https://user-images.githubusercontent.com/481362/209873324-855bb383-5998-4377-90ee-5bee67d5cc79.png" width="24" height="24"/> Alfred-UTF: Unicode Character Search ![Version badge](https://shields.io/github/v/release/adamkiss/alfred-utf?display_name=tag&include_prereleases&sort=semver)
 
 ![Alfred-utf - workflow screenshot](https://repository-images.githubusercontent.com/583129173/ac6a122c-d1a4-4e7d-aaf8-cfaf4141997c)
 
