@@ -24,6 +24,7 @@ CREATE VIRTUAL TABLE characters USING fts5 (
     name,
     category,
     hex,
+    html,
     keysymbol,
     tokenize = 'porter unicode61'
 );
