@@ -9,3 +9,6 @@ alfred-search.sqlite3
 # built stuff
 /dist/*
 !/dist/.gitkeep
+
+# runtime stuff
+/user.sqlite3

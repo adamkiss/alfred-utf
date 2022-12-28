@@ -15,8 +15,10 @@ else
 fi
 
 /usr/bin/sqlite3 unicode.sqlite3 <<EOF
-SELECT *, rank
-FROM characters('$query')
-ORDER BY rank, length(name)
+ATTACH "./user.sqlite3" as user;
+SELECT *, rank, usage.count
+FROM main.characters('$query')
+LEFT JOIN user.usage ON main.characters.hex = user.usage.id
+ORDER BY user.usage.count, rank, length(name)
 LIMIT 50;
 EOF
