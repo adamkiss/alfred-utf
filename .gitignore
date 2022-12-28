@@ -1,4 +1,11 @@
+# macos
 .DS_Store
+
+# random stuff
 uni
 *.sql
 alfred-search.sqlite3
+
+# built stuff
+/dist/*
+!/dist/.gitkeep
