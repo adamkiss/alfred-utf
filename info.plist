@@ -1,0 +1,415 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>bundleid</key>
+	<string>com.adamkiss.utf2</string>
+	<key>category</key>
+	<string>Productivity</string>
+	<key>connections</key>
+	<dict>
+		<key>682E59B1-A662-4A7A-B712-39E3D502E4F4</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>E144816E-4B9C-481C-AE1A-1EB38DB193ED</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+	</dict>
+	<key>createdby</key>
+	<string>Adam Kiss</string>
+	<key>description</key>
+	<string>Searh thorugh unicode database</string>
+	<key>disabled</key>
+	<false/>
+	<key>name</key>
+	<string>UTF Search</string>
+	<key>objects</key>
+	<array>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>alfredfiltersresults</key>
+				<true/>
+				<key>alfredfiltersresultsmatchmode</key>
+				<integer>0</integer>
+				<key>argumenttreatemptyqueryasnil</key>
+				<false/>
+				<key>argumenttrimmode</key>
+				<integer>0</integer>
+				<key>argumenttype</key>
+				<integer>1</integer>
+				<key>escaping</key>
+				<integer>127</integer>
+				<key>keyword</key>
+				<string>jsonformat</string>
+				<key>queuedelaycustom</key>
+				<integer>1</integer>
+				<key>queuedelayimmediatelyinitially</key>
+				<false/>
+				<key>queuedelaymode</key>
+				<integer>0</integer>
+				<key>queuemode</key>
+				<integer>1</integer>
+				<key>runningsubtext</key>
+				<string></string>
+				<key>script</key>
+				<string>#
+# Alfred Script Filter JSON format
+#
+# This example demonstrates all fields available for populating results.
+#
+# For an in-depth explanation, use the (?) help button to the bottom left.
+#
+
+cat &lt;&lt; EOB
+{"items": [
+
+	{
+		"uid": "desktop",
+		"type": "file",
+		"title": "Desktop",
+		"subtitle": "~/Desktop",
+		"arg": "~/Desktop",
+		"autocomplete": "Desktop",
+		"icon": {
+			"type": "fileicon",
+			"path": "~/Desktop"
+		}
+	},
+
+	{
+		"valid": false,
+		"uid": "flickr",
+		"title": "Flickr",
+		"icon": {
+			"path": "flickr.png"
+		}
+	},
+
+	{
+		"uid": "image",
+		"type": "file",
+		"title": "My holiday photo",
+		"subtitle": "~/Pictures/My holiday photo.jpg",
+		"autocomplete": "My holiday photo",
+		"icon": {
+			"type": "filetype",
+			"path": "public.jpeg"
+		}
+	},
+
+	{
+		"valid": false,
+		"uid": "alfredapp",
+		"title": "Alfred Website",
+		"subtitle": "https://www.alfredapp.com/",
+		"arg": "alfredapp.com",
+		"autocomplete": "Alfred Website",
+		"quicklookurl": "https://www.alfredapp.com/",
+		"mods": {
+			"alt": {
+				"valid": true,
+				"arg": "alfredapp.com/powerpack",
+				"subtitle": "https://www.alfredapp.com/powerpack/"
+			},
+			"cmd": {
+				"valid": true,
+				"arg": "alfredapp.com/powerpack/buy/",
+				"subtitle": "https://www.alfredapp.com/powerpack/buy/"
+			},
+		},
+		"text": {
+			"copy": "https://www.alfredapp.com/ (text here to copy)",
+			"largetype": "https://www.alfredapp.com/ (text here for large type)"
+		}
+	}
+
+]}
+EOB</string>
+				<key>scriptargtype</key>
+				<integer>1</integer>
+				<key>scriptfile</key>
+				<string>test.sh</string>
+				<key>subtext</key>
+				<string>Generate results into Alfred from JSON</string>
+				<key>title</key>
+				<string>Script Filter JSON format</string>
+				<key>type</key>
+				<integer>0</integer>
+				<key>withspace</key>
+				<true/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.scriptfilter</string>
+			<key>uid</key>
+			<string>50B0CD10-4D52-4898-9C05-DD3A34A829C3</string>
+			<key>version</key>
+			<integer>3</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>alfredfiltersresults</key>
+				<true/>
+				<key>alfredfiltersresultsmatchmode</key>
+				<integer>0</integer>
+				<key>argumenttreatemptyqueryasnil</key>
+				<false/>
+				<key>argumenttrimmode</key>
+				<integer>0</integer>
+				<key>argumenttype</key>
+				<integer>1</integer>
+				<key>escaping</key>
+				<integer>127</integer>
+				<key>keyword</key>
+				<string>xmlformat</string>
+				<key>queuedelaycustom</key>
+				<integer>3</integer>
+				<key>queuedelayimmediatelyinitially</key>
+				<false/>
+				<key>queuedelaymode</key>
+				<integer>0</integer>
+				<key>queuemode</key>
+				<integer>1</integer>
+				<key>runningsubtext</key>
+				<string></string>
+				<key>script</key>
+				<string>#
+# Alfred Script Filter XML format
+#
+# This example is here for completeness. It is recommended that you
+# return JSON from your script filters for the highest performance.
+#
+# For an in-depth explanation, use the (?) help button to the bottom left.
+#
+# Added to XML format for Alfred 3: &lt;quicklook&gt; and &lt;mod/&gt;
+#
+
+cat &lt;&lt; EOB
+&lt;?xml version="1.0"?&gt;
+&lt;items&gt;
+
+&lt;!--
+  Example of using icon type 'fileicon' to load the file icon directly.
+  This item is of type "file" which means it will be treated as a file in
+  Alfred's results, so can be actioned and revealed in finder.
+  Autocomplete sets what will complete when the user autocompletes.
+--&gt;
+
+  &lt;item uid="desktop" arg="~/Desktop" valid="YES" autocomplete="Desktop" type="file"&gt;
+    &lt;title&gt;Desktop&lt;/title&gt;
+    &lt;subtitle&gt;~/Desktop&lt;/subtitle&gt;
+    &lt;icon type="fileicon"&gt;~/Desktop&lt;/icon&gt;
+  &lt;/item&gt;
+
+&lt;!--
+  Example of loading an icon from the Workflow's folder.
+  This item is set as valid no, which means it won't be actioned
+--&gt;
+
+  &lt;item uid="flickr" valid="no" autocomplete="flickr"&gt;
+    &lt;title&gt;Flickr&lt;/title&gt;
+    &lt;icon&gt;flickr.png&lt;/icon&gt;
+  &lt;/item&gt;
+
+&lt;!--
+  Example of using icon type 'filetype' to load the icon for the file type.
+  This item is of type "file" which means it will be treated as a file in
+  Alfred's results, so can be actioned and revealed in finder.
+--&gt;
+
+  &lt;item uid="image" autocomplete="My holiday photo" type="file"&gt; 
+    &lt;title&gt;My holiday photo&lt;/title&gt; 
+    &lt;subtitle&gt;~/Pictures/My holiday photo.jpg&lt;/subtitle&gt; 
+    &lt;icon type="filetype"&gt;public.jpeg&lt;/icon&gt; 
+  &lt;/item&gt;
+
+&lt;!--
+  Example of using of the new XML features from Alfred 2.3 onwards. The
+  ability to define some dynamic alternative modifier subtexts as well
+  as define the text used for ⌘C copying and ⌘L large type.
+
+  Subtitle modifiers can be shift, fn, ctrl, alt, cmd and will only show
+  the relevant modified output connection is made.
+--&gt;
+
+  &lt;item uid="home" arg="~/" valid="NO" autocomplete="Home" type="file"&gt;
+    &lt;title&gt;Home Folder&lt;/title&gt;
+    &lt;icon type="fileicon"&gt;~/&lt;/icon&gt;
+    &lt;subtitle&gt;Home folder ~/&lt;/subtitle&gt;
+    &lt;subtitle mod="fn"&gt;Subtext when fn is pressed&lt;/subtitle&gt;
+    &lt;subtitle mod="ctrl"&gt;Subtext when ctrl is pressed&lt;/subtitle&gt;
+    &lt;subtitle mod="alt"&gt;Subtext when alt is pressed&lt;/subtitle&gt;
+    &lt;subtitle mod="cmd"&gt;Subtext when cmd is pressed&lt;/subtitle&gt;
+    &lt;quicklookurl&gt;https://www.alfredapp.com/&lt;/quicklookurl&gt;
+    &lt;mod key="shift" subtitle="New subtext when shift is pressed" valid="yes" arg="shiftmod"/&gt;
+    &lt;text type="copy"&gt;Text when copying&lt;/text&gt;
+    &lt;text type="largetype"&gt;Text for LargeType&lt;/text&gt;
+  &lt;/item&gt;
+
+&lt;/items&gt;
+
+EOB</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>subtext</key>
+				<string>Generate results into Alfred from XML</string>
+				<key>title</key>
+				<string>Script Filter XML Format</string>
+				<key>type</key>
+				<integer>0</integer>
+				<key>withspace</key>
+				<true/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.scriptfilter</string>
+			<key>uid</key>
+			<string>0B25B88F-4243-4E75-983B-36D1C96F4E94</string>
+			<key>version</key>
+			<integer>3</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>alfredfiltersresults</key>
+				<false/>
+				<key>alfredfiltersresultsmatchmode</key>
+				<integer>0</integer>
+				<key>argumenttreatemptyqueryasnil</key>
+				<true/>
+				<key>argumenttrimmode</key>
+				<integer>0</integer>
+				<key>argumenttype</key>
+				<integer>0</integer>
+				<key>escaping</key>
+				<integer>102</integer>
+				<key>keyword</key>
+				<string>sql3</string>
+				<key>queuedelaycustom</key>
+				<integer>3</integer>
+				<key>queuedelayimmediatelyinitially</key>
+				<true/>
+				<key>queuedelaymode</key>
+				<integer>0</integer>
+				<key>queuemode</key>
+				<integer>1</integer>
+				<key>runningsubtext</key>
+				<string></string>
+				<key>script</key>
+				<string>echo `/usr/bin/sqlite3 alfred-search.sqlite3 &lt;&lt;EOF
+WITH filtered as (
+	SELECT *
+	FROM test1
+	WHERE count &gt; $1
+	ORDER BY count ASC
+)
+select JSON_OBJECT(
+	'items', JSON_GROUP_ARRAY(
+		JSON_OBJECT(
+			'uid', id,
+			'title', pet,
+			'subtitle', count
+		)
+	)
+) FROM filtered;
+EOF`</string>
+				<key>scriptargtype</key>
+				<integer>1</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>subtext</key>
+				<string></string>
+				<key>title</key>
+				<string>Search sqlite3</string>
+				<key>type</key>
+				<integer>5</integer>
+				<key>withspace</key>
+				<true/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.scriptfilter</string>
+			<key>uid</key>
+			<string>682E59B1-A662-4A7A-B712-39E3D502E4F4</string>
+			<key>version</key>
+			<integer>3</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>lastpathcomponent</key>
+				<false/>
+				<key>onlyshowifquerypopulated</key>
+				<false/>
+				<key>removeextension</key>
+				<false/>
+				<key>text</key>
+				<string>{query}</string>
+				<key>title</key>
+				<string>Oi</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.output.notification</string>
+			<key>uid</key>
+			<string>E144816E-4B9C-481C-AE1A-1EB38DB193ED</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+	</array>
+	<key>readme</key>
+	<string>Alfred's Script Filter object is extremely powerful, and gives you control over the results displayed in Alfred.
+
+Alfred 3 now supports JSON, which is the recommended format. XML is also supported for legacy Alfred 2 workflows, and has been updated to include the new features.
+
+A new option now exists for Script Filters, "Alfred filters results". This allows you to return a whole list of results, let Alfred do the subsequent filtering with extreme performance. When this option is selected, your script will be called once with no argument.</string>
+	<key>uidata</key>
+	<dict>
+		<key>0B25B88F-4243-4E75-983B-36D1C96F4E94</key>
+		<dict>
+			<key>note</key>
+			<string>XML is still supported for legacy workflows, and has been updated to support the new parameters.</string>
+			<key>xpos</key>
+			<real>310</real>
+			<key>ypos</key>
+			<real>50</real>
+		</dict>
+		<key>50B0CD10-4D52-4898-9C05-DD3A34A829C3</key>
+		<dict>
+			<key>note</key>
+			<string>Alfred 3 now supports JSON as the Script Filter output. This is the recommended output.</string>
+			<key>xpos</key>
+			<real>70</real>
+			<key>ypos</key>
+			<real>50</real>
+		</dict>
+		<key>682E59B1-A662-4A7A-B712-39E3D502E4F4</key>
+		<dict>
+			<key>xpos</key>
+			<real>130</real>
+			<key>ypos</key>
+			<real>245</real>
+		</dict>
+		<key>E144816E-4B9C-481C-AE1A-1EB38DB193ED</key>
+		<dict>
+			<key>xpos</key>
+			<real>475</real>
+			<key>ypos</key>
+			<real>245</real>
+		</dict>
+	</dict>
+	<key>userconfigurationconfig</key>
+	<array/>
+	<key>version</key>
+	<string>1.0</string>
+	<key>webaddress</key>
+	<string>https://adamkiss.com</string>
+</dict>
+</plist>
