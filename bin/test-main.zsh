@@ -16,6 +16,12 @@ fi
 
 /usr/bin/sqlite3 unicode.sqlite3 <<EOF
 ATTACH "./user.sqlite3" as user;
+CREATE TABLE IF NOT EXISTS user."usage" (
+	"id" string UNIQUE NOT NULL,
+	"count" integer NOT NULL DEFAULT 1,
+	PRIMARY KEY (id)
+);
+
 -- the query
 WITH found AS (
 	SELECT character, name, category, hex, html, json, user.usage.count

@@ -4,13 +4,23 @@
     "version": "2.0.0",
     "tasks": [
         {
+            "label": "Run the top10",
+            "type": "shell",
+            "command": "zsh ./bin/test-top10.zsh | jq",
+            "problemMatcher": [],
+            "group": {
+                "kind": "test",
+                "isDefault": true
+
+            }
+        },
+        {
             "label": "Run the main function",
             "type": "shell",
             "command": "zsh ./bin/test-main.zsh ':rarr* OR times*' | jq",
             "problemMatcher": [],
             "group": {
                 "kind": "test",
-                "isDefault": true
             }
         }
     ]
