@@ -177,9 +177,9 @@ EOF</string>
 				<key>scriptfile</key>
 				<string></string>
 				<key>subtext</key>
-				<string></string>
+				<string>Search the Unicode database for {query}</string>
 				<key>title</key>
-				<string>Search sqlite3</string>
+				<string>UTF Search: Unicode database search</string>
 				<key>type</key>
 				<integer>5</integer>
 				<key>withspace</key>
@@ -303,9 +303,9 @@ EOF</string>
 				<key>scriptfile</key>
 				<string></string>
 				<key>subtext</key>
-				<string></string>
+				<string>Shows your top 10 most used characters</string>
 				<key>title</key>
-				<string>UTF: Top 10 used characters</string>
+				<string>UTF Search: Your top 10</string>
 				<key>type</key>
 				<integer>5</integer>
 				<key>withspace</key>
@@ -435,15 +435,15 @@ MIT License - see [LICENSE](./LICENSE)
 		<key>D028B37E-807C-458A-8FE7-27AB283839AC</key>
 		<dict>
 			<key>xpos</key>
-			<real>415</real>
+			<real>405</real>
 			<key>ypos</key>
-			<real>375</real>
+			<real>370</real>
 		</dict>
 	</dict>
 	<key>userconfigurationconfig</key>
 	<array/>
 	<key>version</key>
-	<string>2.0.1</string>
+	<string>2.0.2</string>
 	<key>webaddress</key>
 	<string>https://adamkiss.com</string>
 </dict>
