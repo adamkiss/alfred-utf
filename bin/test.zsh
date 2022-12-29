@@ -25,6 +25,7 @@ capture=`zsh bin/test-main.zsh 'u0027' | jq '.items | length'`
 echo -n "that element is apostrophe… "
 capture=`zsh bin/test-main.zsh 'u0027' | jq -r '.items[0].title'`
 [[ $capture == "'"  ]] && echo ' YES' || echo " NO ($capture)"
+echo
 
 # matching characters BEFORE
 echo -n "'l arrow' = '⇆' "
@@ -39,6 +40,7 @@ capture=`zsh bin/test-main.zsh 'r arrow' | jq -r '.items[0].title'`
 echo -n "'sign' = '¶'"
 capture=`zsh bin/test-main.zsh 'sign' | jq -r '.items[0].title'`
 [[ $capture == '¶'  ]] && echo ' YES' || echo " NO ($capture)"
+echo
 
 # matching exact characters
 echo -n "!! returns one element… "
@@ -47,6 +49,7 @@ capture=`zsh bin/test-main.zsh '!!' | jq '.items | length'`
 echo -n "that element is apostrophe… "
 capture=`zsh bin/test-main.zsh '!!' | jq -r '.items[0].title'`
 [[ $capture == "!"  ]] && echo ' YES' || echo " NO ($capture)"
+echo
 
 # spawn usage of three characters: 5× '😊', 3× '→', 1× '×'
 echo -n "Generating fake user.usage… "

@@ -6,7 +6,7 @@
         {
             "label": "Run tests",
             "type": "shell",
-            "command": "zsh ./bin/test.zsh",
+            "command": "time zsh ./bin/test.zsh",
             "problemMatcher": [],
             "group": {
                 "kind": "test",
