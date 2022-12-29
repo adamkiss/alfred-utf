@@ -345,11 +345,30 @@ echo "INSERT INTO usage(id) VALUES('$hex') ON CONFLICT(id) DO UPDATE SET count=c
 		</dict>
 	</array>
 	<key>readme</key>
-	<string>Alfred's Script Filter object is extremely powerful, and gives you control over the results displayed in Alfred.
+	<string># Alfred-UTF: Unicode Character Search
 
-Alfred 3 now supports JSON, which is the recommended format. XML is also supported for legacy Alfred 2 workflows, and has been updated to include the new features.
 
-A new option now exists for Script Filters, "Alfred filters results". This allows you to return a whole list of results, let Alfred do the subsequent filtering with extreme performance. When this option is selected, your script will be called once with no argument.</string>
+Simple workflow to replace now defunct Python 2 workflow. Uses pure SQLite3 - with fts5 and json1 extensions - which is still packaged with MacOS, unlike PHP or Python 2 in versions of MacOS 13+.
+
+## Usage
+
+- `utf right arr` - Search for a Unicode character
+    - Default action: copy the character (e.g. `→`)
+    - &lt;kbd&gt;Cmd&lt;/kbd&gt; - copy the HTML version (e.g. `&amp;rarr;`)
+    - &lt;kbd&gt;Option&lt;/kbd&gt; - copy the Unicode point for js/php/python/… (e.g. `\u2192`)
+    - &lt;kbd&gt;Ctrl&lt;/kbd&gt; - copy the decimal value for whatever reason (e.g. `2192`) 
+- `utf :whatever*` - If your query starts with **colon**, you are writing raw SQLite fts5 match syntax. Use only if you desire to fool around with stuff.
+- `utf10` - Top 10 characters you've used in the past, with count of times you've used them
+
+## Installation
+
+1. Download the workflow
+2. Use the workflow
+
+## License
+
+MIT License - see [LICENSE](./LICENSE)
+© 2022 Adam Kiss. Databased was sourced with [Uni by Martin Tournoij](https://github.com/arp242/uni)</string>
 	<key>uidata</key>
 	<dict>
 		<key>5E7B0A6F-E454-4658-BB2C-A08DBF7549BE</key>
