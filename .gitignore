@@ -11,4 +11,5 @@ alfred-search.sqlite3
 
 # runtime stuff
 /user.sqlite3
+/user.sqlite3.bkp
 /prefs.plist
