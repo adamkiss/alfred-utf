@@ -2,12 +2,12 @@
 
 # wrap argument "cat" as "category:$cat" and return formatted characters from the category
 function uni_category -a cat
-    set capture (string join ',' (eval "$(status dirname)/uni-v2.5.1 print category:\$cat -c -f \"(%(hex q), %(char q), LOWER(%(name q)), %(cat q), %(html q), %(json q), %(keysym q))\""))
+    set capture (string join ',' (eval "$(status dirname)/uni-v2.5.1 print category:\$cat -c -f \"(%(hex q), SUBSTR(%(cpoint q), 3), %(char q), LOWER(%(name q)), %(cat q), %(html q), %(json q), %(keysym q))\""))
     string replace "'''" "''''" $capture # fucking apostrophe
 end
 
 function insert_into_characters -a cat
-    echo "INSERT INTO characters (hex, character, name, category, html, json, keysymbol) VALUES $(uni_category $cat);"
+    echo "INSERT INTO characters (hex, codepoint, character, name, category, html, json, keysymbol) VALUES $(uni_category $cat);"
 end
 
 # Create the unicode characters database
@@ -15,6 +15,7 @@ echo "
 DROP TABLE IF EXISTS characters;
 CREATE VIRTUAL TABLE characters USING fts5 (
     hex,
+    codepoint UNINDEXED,
     character UNINDEXED,
     name,
     alt,
