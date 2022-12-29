@@ -22,6 +22,15 @@
             "group": {
                 "kind": "test",
             }
-        }
+        },
+        {
+            "label": "Rebuild the Unicode table",
+            "type": "shell",
+            "command": "php bin/parse-unicode-data.php",
+            "problemMatcher": [],
+            "group": {
+                "kind": "build",
+            }
+        } 
     ]
 }
