@@ -2,7 +2,6 @@
 .DS_Store
 
 # random stuff
-uni
 *.sql
 alfred-search.sqlite3
 
