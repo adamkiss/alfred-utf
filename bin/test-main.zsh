@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS user."usage" (
 
 -- the query
 WITH found AS (
-	SELECT character, name, category, hex, html, json, user.usage.count
+	SELECT character, name, alt, category, hex, html, json, user.usage.count
 	FROM main.characters('$query')
 	LEFT JOIN user.usage ON main.characters.hex = user.usage.id
 	ORDER BY user.usage.count DESC, rank ASC, length(name) ASC
@@ -36,7 +36,7 @@ select JSON_OBJECT(
 		JSON_OBJECT(
 			'variables', JSON_OBJECT('hex', hex),
 			'title', character,
-			'subtitle', name || " (" || category || IIF(count > 0, ", " || count, '') || ")",
+			'subtitle', name || " / " || alt || " (" || category || IIF(count > 0, ", " || count, '') || ")",
 			'icon', JSON_OBJECT('path', 'icon.png'),
 			'arg', character,
 			'mods', JSON_OBJECT(
