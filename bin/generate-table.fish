@@ -17,6 +17,7 @@ CREATE VIRTUAL TABLE characters USING fts5 (
     hex,
     character UNINDEXED,
     name,
+    alt,
     category,
     html,
     json,
@@ -30,6 +31,7 @@ $(insert_into_characters N)
 $(insert_into_characters P)
 $(insert_into_characters S)
 $(insert_into_characters Z)
+$(eval "php $(status dirname)/parse-unicode-data.php")
 " > generate-table.sql # it's ran from main folder
 
 # run the SQL and generate the table

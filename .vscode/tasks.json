@@ -35,7 +35,7 @@
         {
             "label": "Rebuild the Unicode database",
             "type": "shell",
-            "command": "bin/generate-table.fish",
+            "command": "time bin/generate-table.fish",
             "problemMatcher": [],
             "group": {
                 "kind": "build",
