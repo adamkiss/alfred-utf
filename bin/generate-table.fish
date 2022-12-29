@@ -26,6 +26,7 @@ CREATE VIRTUAL TABLE characters USING fts5 (
 $(insert_into_characters C)
 $(insert_into_characters L)
 $(insert_into_characters M)
+$(insert_into_characters N)
 $(insert_into_characters P)
 $(insert_into_characters S)
 $(insert_into_characters Z)
