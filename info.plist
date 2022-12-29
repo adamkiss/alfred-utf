@@ -414,7 +414,7 @@ MIT License - see [LICENSE](./LICENSE)
 	<key>userconfigurationconfig</key>
 	<array/>
 	<key>version</key>
-	<string>2.0.0</string>
+	<string>2.0.1</string>
 	<key>webaddress</key>
 	<string>https://adamkiss.com</string>
 </dict>
