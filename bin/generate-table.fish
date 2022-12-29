@@ -18,7 +18,7 @@ CREATE VIRTUAL TABLE characters USING fts5 (
     character UNINDEXED,
     name,
     category,
-    html UNINDEXED,
+    html,
     json,
     keysymbol,
     tokenize = 'porter unicode61'
