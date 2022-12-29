@@ -1,6 +1,6 @@
 #!/usr/bin/env zsh
 
-# Load the top 10 and display the as alfred results
+# Load the top 9 and display the as alfred results
 /usr/bin/sqlite3 user.sqlite3 <<EOF
 ATTACH "./unicode.sqlite3" as u;
 CREATE TABLE IF NOT EXISTS "usage" (
@@ -24,7 +24,7 @@ select IIF(
 		'items', JSON_GROUP_ARRAY(
 			JSON_OBJECT(
 				'variables', JSON_OBJECT('hex', hex),
-				'title', character || "   (" || count || "⨉)",
+				'title', character || "   (" || count || "×)",
 				'subtitle', name || " (" || category || ")",
 				'icon', JSON_OBJECT('path', 'icon.png'),
 				'arg', character,
