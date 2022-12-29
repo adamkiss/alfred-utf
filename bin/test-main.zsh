@@ -34,7 +34,6 @@ WITH found AS (
 select JSON_OBJECT(
 	'items', JSON_GROUP_ARRAY(
 		JSON_OBJECT(
-			'uid', hex,
 			'variables', JSON_OBJECT('hex', hex),
 			'title', character,
 			'subtitle', name || " (" || category || IIF(count > 0, ", " || count, '') || ")",
