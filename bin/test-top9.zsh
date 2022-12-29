@@ -10,12 +10,12 @@ CREATE TABLE IF NOT EXISTS "usage" (
 );
 
 -- the query
-WITH top10 AS (
+WITH top AS (
 	SELECT id, count, hex, character, name, category, html, json
 	FROM main.usage
 	LEFT JOIN u.characters ON usage.id = characters.hex
 	ORDER BY count DESC
-	LIMIT 10
+	LIMIT 9
 )
 -- the formatter
 select IIF(
@@ -55,5 +55,5 @@ select IIF(
 			)
 		)
 	)
-) FROM top10;
+) FROM top;
 EOF

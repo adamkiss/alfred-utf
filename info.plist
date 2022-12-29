@@ -227,7 +227,7 @@ EOF</string>
 				<key>escaping</key>
 				<integer>102</integer>
 				<key>keyword</key>
-				<string>utf10</string>
+				<string>utf9</string>
 				<key>queuedelaycustom</key>
 				<integer>3</integer>
 				<key>queuedelayimmediatelyinitially</key>
@@ -251,12 +251,12 @@ CREATE TABLE IF NOT EXISTS "usage" (
 );
 
 -- the query
-WITH top10 AS (
+WITH top AS (
 	SELECT id, count, hex, character, name, category, html, json
 	FROM main.usage
 	LEFT JOIN u.characters ON usage.id = characters.hex
 	ORDER BY count DESC
-	LIMIT 10
+	LIMIT 9
 )
 -- the formatter
 select IIF(
@@ -296,16 +296,16 @@ select IIF(
 			)
 		)
 	)
-) FROM top10;
+) FROM top;
 EOF</string>
 				<key>scriptargtype</key>
 				<integer>1</integer>
 				<key>scriptfile</key>
 				<string></string>
 				<key>subtext</key>
-				<string>Shows your top 10 most used characters</string>
+				<string>Shows your top 9 most used Unicode characters</string>
 				<key>title</key>
-				<string>UTF Search: Your top 10</string>
+				<string>UTF Search: Your top 9 characters</string>
 				<key>type</key>
 				<integer>5</integer>
 				<key>withspace</key>

@@ -6,7 +6,7 @@
         {
             "label": "Run the top10",
             "type": "shell",
-            "command": "zsh ./bin/test-top10.zsh | jq",
+            "command": "zsh ./bin/test-top9.zsh | jq",
             "problemMatcher": [],
             "group": {
                 "kind": "test",
