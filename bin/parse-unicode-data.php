@@ -6,7 +6,6 @@ function a(...$arg) { return $arg; }
 if (!function_exists('ray')) { function ray(...$arg) { return $arg; }}
 
 # Latest unicode data: https://www.unicode.org/Public/UCD/latest/ucd/
-
 # Download latest UnicodeData.txt
 if (count($argv) > 1 && $argv[1] === 'dud') {
     file_put_contents(
@@ -80,8 +79,25 @@ while(! $datafile->eof()) {
 }
 
 // Now get only character that have alt name
+// And transform from [index => [data]] to [hex => [data]]
 $altNameCharacters = array_filter($data, fn($ch) => !empty($ch['alt']));
+$altNameCharacters = array_reduce($altNameCharacters, function($arr, $ch) {
+    $arr[$ch['hex']] = $ch;
+    return $arr;
+}, []);
 
+// Now for special cases
+if (!function_exists('set_or_add')) {
+    function set_or_add(array &$arr, string $hex, string $alt, string $name) {
+        if (array_key_exists($hex, $arr)) {
+            $arr[$hex]['alt'] .= ", {$alt}";
+        } else {
+            $arr[$hex] = ['hex' => $hex, 'alt' => $alt, 'name' => $name];
+        }
+    }
+}
+set_or_add($altNameCharacters, '21a9', 'return', 'leftwards arrow with hook'); // ↩
+set_or_add($altNameCharacters, '2303', 'control, ctrl', 'up arrowhead'); // ⌃
 
 // OBSERVE
 if ($argv[1] ?? false === 'debug') {
