@@ -18,7 +18,7 @@ CREATE VIRTUAL TABLE characters USING fts5 (
     codepoint UNINDEXED,
     character UNINDEXED,
     name,
-    alt,
+    altname,
     category,
     html,
     json,

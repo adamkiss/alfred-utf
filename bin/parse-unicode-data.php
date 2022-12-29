@@ -109,7 +109,7 @@ if ($argv[1] ?? false === 'debug') {
     );
 } else {
     echo implode('', array_map(
-        fn($ch) => "UPDATE characters SET alt = '{$ch['alt']}' WHERE hex = '{$ch['hex']}';",
+        fn($ch) => "UPDATE characters SET altname = '{$ch['alt']}' WHERE hex = '{$ch['hex']}';",
         $altNameCharacters
     ));
 }
