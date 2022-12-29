@@ -179,7 +179,7 @@ EOF</string>
 				<key>subtext</key>
 				<string>Search the Unicode database for {query}</string>
 				<key>title</key>
-				<string>UTF Search: Unicode database search</string>
+				<string>UTF Search: search for Unicode characters</string>
 				<key>type</key>
 				<integer>5</integer>
 				<key>withspace</key>
@@ -443,7 +443,7 @@ MIT License - see [LICENSE](./LICENSE)
 	<key>userconfigurationconfig</key>
 	<array/>
 	<key>version</key>
-	<string>2.0.2</string>
+	<string>2.0.3</string>
 	<key>webaddress</key>
 	<string>https://adamkiss.com</string>
 </dict>
