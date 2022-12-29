@@ -131,6 +131,12 @@ fi
 
 /usr/bin/sqlite3 unicode.sqlite3 &lt;&lt;EOF
 ATTACH "./user.sqlite3" as user;
+CREATE TABLE IF NOT EXISTS user."usage" (
+	"id" string UNIQUE NOT NULL,
+	"count" integer NOT NULL DEFAULT 1,
+	PRIMARY KEY (id)
+);
+
 -- the query
 WITH found AS (
 	SELECT character, name, category, hex, html, json, user.usage.count
@@ -235,13 +241,15 @@ EOF</string>
 				<key>script</key>
 				<string>#!/usr/bin/env zsh
 
-# Create the usage table if it doesn't exist
-if ! [[ -f user.sqlite3 ]]; then
-    echo 'CREATE TABLE "usage" ("id" string UNIQUE NOT NULL,"count" integer NOT NULL DEFAULT 1, PRIMARY KEY (id));' | sqlite3 user.sqlite3
-fi
-
+# Load the top 10 and display the as alfred results
 /usr/bin/sqlite3 user.sqlite3 &lt;&lt;EOF
 ATTACH "./unicode.sqlite3" as u;
+CREATE TABLE IF NOT EXISTS "usage" (
+	"id" string UNIQUE NOT NULL,
+	"count" integer NOT NULL DEFAULT 1,
+	PRIMARY KEY (id)
+);
+
 -- the query
 WITH top10 AS (
 	SELECT id, count, hex, character, name, category, html, json
@@ -251,27 +259,40 @@ WITH top10 AS (
 	LIMIT 10
 )
 -- the formatter
-select JSON_OBJECT(
-	'items', JSON_GROUP_ARRAY(
-		JSON_OBJECT(
-			'variables', JSON_OBJECT('hex', hex),
-			'title', character || "   (" || count || "⨉)",
-			'subtitle', name || " (" || category || ")",
-			'icon', JSON_OBJECT('path', 'icon.png'),
-			'arg', character,
-			'mods', JSON_OBJECT(
-				'cmd', JSON_OBJECT(
-					'arg', html,
-					'subtitle', 'Copy &amp; paste as HTML'
-				),
-				'option', JSON_OBJECT(
-					'arg', json,
-					'subtitle', 'Copy &amp; paste as JS/Python/…'
-				),
-				'ctrl', JSON_OBJECT(
-					'arg', hex,
-					'subtitle', 'Copy &amp; paste as Decimal value'
+select IIF(
+	count(*) &gt; 0,
+	JSON_OBJECT(
+		'items', JSON_GROUP_ARRAY(
+			JSON_OBJECT(
+				'variables', JSON_OBJECT('hex', hex),
+				'title', character || "   (" || count || "⨉)",
+				'subtitle', name || " (" || category || ")",
+				'icon', JSON_OBJECT('path', 'icon.png'),
+				'arg', character,
+				'mods', JSON_OBJECT(
+					'cmd', JSON_OBJECT(
+						'arg', html,
+						'subtitle', 'Copy &amp; paste as HTML'
+					),
+					'option', JSON_OBJECT(
+						'arg', json,
+						'subtitle', 'Copy &amp; paste as JS/Python/…'
+					),
+					'ctrl', JSON_OBJECT(
+						'arg', hex,
+						'subtitle', 'Copy &amp; paste as Decimal value'
+					)
 				)
+			)
+		)
+	),
+	JSON_OBJECT(
+		'items', JSON_ARRAY(
+			JSON_OBJECT(
+				'valid', false,
+				'title', "UTF Search: no usage yet",
+				'subtitle', "Search the UTF database using 'utf &lt;query&gt;' first",
+				'icon', JSON_OBJECT('path', 'icon.png')
 			)
 		)
 	)
@@ -305,13 +326,21 @@ EOF</string>
 				<key>escaping</key>
 				<integer>102</integer>
 				<key>script</key>
-				<string># Create the usage table if it doesn't exist
-if ! [[ -f user.sqlite3 ]]; then
-    echo 'CREATE TABLE "usage" ("id" string UNIQUE NOT NULL,"count" integer NOT NULL DEFAULT 1, PRIMARY KEY (id));' | /usr/bin/sqlite3 user.sqlite3
-fi
+				<string>#!/usr/bin/env zsh
 
-# Upsert the HEX value count
-echo "INSERT INTO usage(id) VALUES('$hex') ON CONFLICT(id) DO UPDATE SET count=count+1;" | /usr/bin/sqlite3 user.sqlite3</string>
+/usr/bin/sqlite3 user.sqlite3 &lt;&lt;EOF
+    CREATE TABLE IF NOT EXISTS "usage" (
+        "id" string UNIQUE NOT NULL,
+        "count" integer NOT NULL DEFAULT 1,
+        PRIMARY KEY (id)
+    );
+
+    INSERT INTO
+        usage(id)
+        VALUES('$hex')
+    ON CONFLICT(id) DO
+        UPDATE SET count=count+1;
+EOF</string>
 				<key>scriptargtype</key>
 				<integer>1</integer>
 				<key>scriptfile</key>
