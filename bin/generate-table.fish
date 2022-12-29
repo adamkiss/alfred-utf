@@ -2,7 +2,7 @@
 
 # wrap argument "cat" as "category:$cat" and return formatted characters from the category
 function uni_category -a cat
-    set capture (string join ',' (./uni print category:$cat -c -f "(%(hex q), %(char q), LOWER(%(name q)), %(cat q), %(html q), %(json q), %(keysym q))"))
+    set capture (string join ',' (eval "$(status dirname)/uni-v2.5.1 print category:\$cat -c -f \"(%(hex q), %(char q), LOWER(%(name q)), %(cat q), %(html q), %(json q), %(keysym q))\""))
     string replace "'''" "''''" $capture # fucking apostrophe
 end
 
