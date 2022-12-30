@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS "usage" (
 
 -- the query
 WITH top AS (
-	SELECT id, count, hex, character, name, category, html, json
+	SELECT id, count, hex, codepoint, character, name, altname, category, html, json
 	FROM main.usage
 	LEFT JOIN u.characters ON usage.id = characters.hex
 	ORDER BY count DESC
@@ -25,22 +25,34 @@ select IIF(
 			JSON_OBJECT(
 				'variables', JSON_OBJECT('hex', hex),
 				'title', character || "   (" || count || "×)",
-				'subtitle', name || " (" || category || ")",
+				'subtitle', name || iif(altname is not null, " / " || altname, '') || " (" || category ||  ")",
 				'icon', JSON_OBJECT('path', 'icon.png'),
 				'arg', character,
 				'mods', JSON_OBJECT(
 					'cmd', JSON_OBJECT(
 						'arg', html,
-						'subtitle', 'Copy & paste as HTML'
+						'subtitle', 'Copy & paste as HTML → "' || html || '"'
 					),
 					'option', JSON_OBJECT(
 						'arg', json,
-						'subtitle', 'Copy & paste as JS/Python/…'
+						'subtitle', 'Copy & paste as JS/Python/… → "' || json || '"'
+					),
+					'option+cmd', JSON_OBJECT(
+						'arg', "\u{" || codepoint || "}",
+						'subtitle', 'Copy & paste as PHP → "\u{' || codepoint || '}"'
 					),
 					'ctrl', JSON_OBJECT(
 						'arg', hex,
-						'subtitle', 'Copy & paste as Decimal value'
+						'subtitle', 'Copy & paste hex → "' || hex || '"'
+					),
+					'ctrl+cmd', JSON_OBJECT(
+						'arg', codepoint,
+						'subtitle', 'Copy & paste full codepoint → "' || codepoint || '"'
 					)
+				),
+				'text', JSON_OBJECT(
+					'copy', name,
+					'largetype', character || '(' || name || ')'
 				)
 			)
 		)

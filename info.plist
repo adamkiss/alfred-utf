@@ -118,60 +118,176 @@
 # trim and collapse whitespace - source: https://stackoverflow.com/a/40962059
 query=`echo $1 | xargs`
 
-# if query contains ':', it's full fts5 query
-# otherwise, change multiple groups into asterisk'd AND query
-# 'right arr' =&gt; 'right* AND arr*'
-raw=":"
-if test "${query#*$raw}" = "$query"
-then
-	query="${query// /* AND }*"
-else
-	query="${query#*$raw}"
-fi
-
-/usr/bin/sqlite3 unicode.sqlite3 &lt;&lt;EOF
-ATTACH "./user.sqlite3" as user;
-CREATE TABLE IF NOT EXISTS user."usage" (
+# prepare the user database (it must exist)
+/usr/bin/sqlite3 user.sqlite3 &lt;&lt;INIT
+CREATE TABLE IF NOT EXISTS "usage" (
 	"id" string UNIQUE NOT NULL,
 	"count" integer NOT NULL DEFAULT 1,
 	PRIMARY KEY (id)
 );
+INIT
 
--- the query
-WITH found AS (
-	SELECT character, name, alt, category, hex, html, json, user.usage.count
-	FROM main.characters('$query')
-	LEFT JOIN user.usage ON main.characters.hex = user.usage.id
-	ORDER BY user.usage.count DESC, rank ASC, length(name) ASC
-	LIMIT 50
-)
--- the formatter
-select JSON_OBJECT(
-	'items', JSON_GROUP_ARRAY(
-		JSON_OBJECT(
-			'variables', JSON_OBJECT('hex', hex),
-			'title', character,
-			'subtitle', name || " / " || alt || " (" || category || IIF(count &gt; 0, ", " || count, '') || ")",
-			'icon', JSON_OBJECT('path', 'icon.png'),
-			'arg', character,
-			'mods', JSON_OBJECT(
-				'cmd', JSON_OBJECT(
-					'arg', html,
-					'subtitle', 'Copy &amp; paste as HTML'
+# CASE: give me help
+if [[ "$query" == "!h" ]]; then
+cat &lt;&lt; HELP
+{
+	"items": [
+		{
+			"title": "👉 \`utf &lt;query&gt;\`",
+			"autocomplete": "right arrow",
+			"subtitle": "Search for a Unicode character with name, altname, html or hex matching &lt;query&gt;",
+			"valid": false
+		},
+		{
+			"title": "🔍 \`utf !&lt;character&gt;\`",
+			"autocomplete": "!!",
+			"subtitle": "Get details for a &lt;character&gt;…",
+			"valid": false
+		},
+		{
+			"title": "🆘 \`utf !h\`",
+			"subtitle": "…except '!h', which returns this help",
+			"valid": false
+		},
+		{
+			"title": "🥩 \`utf :&lt;query&gt;\`",
+			"autocomplete": ":sea* OR chat*",
+			"subtitle": "Start query with a colon to use raw SQLite FTS5 Match syntax (the underlying technology)",
+			"valid": false
+		},
+		{
+			"title": "💡 tip: \`utf u0021\`",
+			"autocomplete": "u0021",
+			"subtitle": "Will mostly match the json field, so you can easily query exact Unicode codepoints",
+			"valid": false
+		},
+		{
+			"title": "💡 tip: \`utf larr\`",
+			"autocomplete": "larr",
+			"subtitle": "Use HTML named entities to quickly match useful characters",
+			"valid": false
+		}
+	]
+}
+HELP
+exit
+fi
+
+# CASE: give me character
+# query starts with !, it's a "give me character X query"
+if [[ "$query" =~ ^! ]]; then
+/usr/bin/sqlite3 unicode.sqlite3 &lt;&lt;SQL
+	ATTACH "./user.sqlite3" as user;
+	-- the query
+	WITH found AS (
+		SELECT hex, codepoint, character, name, altname, category, html, json, user.usage.count
+		FROM main.characters
+		LEFT JOIN user.usage ON main.characters.hex = user.usage.id
+		WHERE character = SUBSTR('$query', 2)
+		ORDER BY user.usage.count
+	)
+	-- the formatter
+	select JSON_OBJECT(
+		'items', JSON_GROUP_ARRAY(
+			JSON_OBJECT(
+				'variables', JSON_OBJECT('hex', hex),
+				'title', character,
+				'subtitle', name || iif(altname is not null, " / " || altname, '') || " (" || category || IIF(count &gt; 0, ", " || count, '') || ")",
+				'icon', JSON_OBJECT('path', 'icon.png'),
+				'arg', character,
+				'mods', JSON_OBJECT(
+					'cmd', JSON_OBJECT(
+						'arg', html,
+						'subtitle', 'Copy &amp; paste as HTML → "' || html || '"'
+					),
+					'option', JSON_OBJECT(
+						'arg', json,
+						'subtitle', 'Copy &amp; paste as JS/Python/… → "' || json || '"'
+					),
+					'option+cmd', JSON_OBJECT(
+						'arg', "\u{" || codepoint || "}",
+						'subtitle', 'Copy &amp; paste as PHP → "\u{' || codepoint || '}"'
+					),
+					'ctrl', JSON_OBJECT(
+						'arg', hex,
+						'subtitle', 'Copy &amp; paste hex → "' || hex || '"'
+					),
+					'ctrl+cmd', JSON_OBJECT(
+						'arg', codepoint,
+						'subtitle', 'Copy &amp; paste full codepoint → "' || codepoint || '"'
+					)
 				),
-				'option', JSON_OBJECT(
-					'arg', json,
-					'subtitle', 'Copy &amp; paste as JS/Python/…'
-				),
-				'ctrl', JSON_OBJECT(
-					'arg', hex,
-					'subtitle', 'Copy &amp; paste as Decimal value'
+				'text', JSON_OBJECT(
+					'copy', name,
+					'largetype', character || '(' || name || ')'
 				)
 			)
 		)
+	) FROM found;
+SQL
+exit
+fi
+
+# CASE: fulltext over name, altname, and other fields
+# if query contains ':', it's full fts5 query
+# otherwise, change multiple groups into asterisk'd AND query
+# 'right arr' =&gt; 'right* AND arr*'
+if [[ "${query#*':'}" == "$query" ]]; then
+	query="${query// /* AND }*"
+else
+	query="${query#*':'}"
+fi
+
+/usr/bin/sqlite3 unicode.sqlite3 &lt;&lt;SQL
+	ATTACH "./user.sqlite3" as user;
+	-- the query
+	WITH found AS (
+		SELECT hex, codepoint, character, name, altname, category, html, json, user.usage.count
+		FROM main.characters('$query')
+		LEFT JOIN user.usage ON main.characters.hex = user.usage.id
+		ORDER BY user.usage.count DESC, rank ASC, length(name) ASC
+		LIMIT 50
 	)
-) FROM found;
-EOF</string>
+	-- the formatter
+	select JSON_OBJECT(
+		'items', JSON_GROUP_ARRAY(
+			JSON_OBJECT(
+				'variables', JSON_OBJECT('hex', hex),
+				'title', character,
+				'subtitle', name || iif(altname is not null, " / " || altname, '') || " (" || category || IIF(count &gt; 0, ", " || count, '') || ")",
+				'icon', JSON_OBJECT('path', 'icon.png'),
+				'arg', character,
+				'mods', JSON_OBJECT(
+					'cmd', JSON_OBJECT(
+						'arg', html,
+						'subtitle', 'Copy &amp; paste as HTML → "' || html || '"'
+					),
+					'option', JSON_OBJECT(
+						'arg', json,
+						'subtitle', 'Copy &amp; paste as JS/Python/… → "' || json || '"'
+					),
+					'option+cmd', JSON_OBJECT(
+						'arg', "\u{" || codepoint || "}",
+						'subtitle', 'Copy &amp; paste as PHP → "\u{' || codepoint || '}"'
+					),
+					'ctrl', JSON_OBJECT(
+						'arg', hex,
+						'subtitle', 'Copy &amp; paste hex → "' || hex || '"'
+					),
+					'ctrl+cmd', JSON_OBJECT(
+						'arg', codepoint,
+						'subtitle', 'Copy &amp; paste full codepoint → "' || codepoint || '"'
+					)
+				),
+				'text', JSON_OBJECT(
+					'copy', name,
+					'largetype', character || '(' || name || ')'
+				)
+			)
+		)
+	) FROM found;
+SQL
+</string>
 				<key>scriptargtype</key>
 				<integer>1</integer>
 				<key>scriptfile</key>
@@ -252,7 +368,7 @@ CREATE TABLE IF NOT EXISTS "usage" (
 
 -- the query
 WITH top AS (
-	SELECT id, count, hex, character, name, category, html, json
+	SELECT id, count, hex, codepoint, character, name, altname, category, html, json
 	FROM main.usage
 	LEFT JOIN u.characters ON usage.id = characters.hex
 	ORDER BY count DESC
@@ -266,22 +382,34 @@ select IIF(
 			JSON_OBJECT(
 				'variables', JSON_OBJECT('hex', hex),
 				'title', character || "   (" || count || "×)",
-				'subtitle', name || " (" || category || ")",
+				'subtitle', name || iif(altname is not null, " / " || altname, '') || " (" || category ||  ")",
 				'icon', JSON_OBJECT('path', 'icon.png'),
 				'arg', character,
 				'mods', JSON_OBJECT(
 					'cmd', JSON_OBJECT(
 						'arg', html,
-						'subtitle', 'Copy &amp; paste as HTML'
+						'subtitle', 'Copy &amp; paste as HTML → "' || html || '"'
 					),
 					'option', JSON_OBJECT(
 						'arg', json,
-						'subtitle', 'Copy &amp; paste as JS/Python/…'
+						'subtitle', 'Copy &amp; paste as JS/Python/… → "' || json || '"'
+					),
+					'option+cmd', JSON_OBJECT(
+						'arg', "\u{" || codepoint || "}",
+						'subtitle', 'Copy &amp; paste as PHP → "\u{' || codepoint || '}"'
 					),
 					'ctrl', JSON_OBJECT(
 						'arg', hex,
-						'subtitle', 'Copy &amp; paste as Decimal value'
+						'subtitle', 'Copy &amp; paste hex → "' || hex || '"'
+					),
+					'ctrl+cmd', JSON_OBJECT(
+						'arg', codepoint,
+						'subtitle', 'Copy &amp; paste full codepoint → "' || codepoint || '"'
 					)
+				),
+				'text', JSON_OBJECT(
+					'copy', name,
+					'largetype', character || '(' || name || ')'
 				)
 			)
 		)
