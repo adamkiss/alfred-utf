@@ -46,9 +46,12 @@ echo
 echo -n "!! returns one element… "
 capture=`zsh bin/test-main.zsh '!!' | jq '.items | length'`
 [[ $capture == '1'  ]] && echo ' YES' || echo " NO ($capture)"
-echo -n "that element is apostrophe… "
+echo -n "that element is !… "
 capture=`zsh bin/test-main.zsh '!!' | jq -r '.items[0].title'`
 [[ $capture == "!"  ]] && echo ' YES' || echo " NO ($capture)"
+echo -n "except !h, which is help… "
+capture=`zsh bin/test-main.zsh '!h' | jq '.items | length'`
+[[ $capture != '1'  ]] && echo ' YES' || echo " NO ($capture)"
 echo
 
 # spawn usage of three characters: 5× '😊', 3× '→', 1× '×'
