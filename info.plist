@@ -504,18 +504,31 @@ EOF</string>
 	<key>readme</key>
 	<string># Alfred-UTF: Unicode Character Search
 
-
-Simple workflow to replace now defunct Python 2 workflow. Uses pure SQLite3 - with fts5 and json1 extensions - which is still packaged with MacOS, unlike PHP or Python 2 in versions of MacOS 13+.
-
 ## Usage
 
-- `utf right arr` - Search for a Unicode character
-    - Default action: copy the character (e.g. `→`)
-    - &lt;kbd&gt;Cmd&lt;/kbd&gt; - copy the HTML version (e.g. `&amp;rarr;`)
-    - &lt;kbd&gt;Option&lt;/kbd&gt; - copy the Unicode point for js/php/python/… (e.g. `\u2192`)
-    - &lt;kbd&gt;Ctrl&lt;/kbd&gt; - copy the decimal value for whatever reason (e.g. `2192`) 
-- `utf :whatever*` - If your query starts with **colon**, you are writing raw SQLite fts5 match syntax. Use only if you desire to fool around with stuff.
-- `utf10` - Top 10 characters you've used in the past, with count of times you've used them
+### Search/show:
+
+- `utf right arr` - Search for a Unicode character by full-text matched name, alternative name, html entity or hexadecimal code
+- `utf !&lt;character&gt;` - Get details for a single exact character, except
+- `utf !h` - get HELP!
+- `utf9` - Your top 9 Unicode characters
+
+### Result Actions:
+- Default action: copy the character (e.g. `!`)
+- &lt;kbd&gt;Cmd&lt;/kbd&gt; - copy the HTML version (e.g. `&amp;excl;`)
+- &lt;kbd&gt;Option&lt;/kbd&gt; - copy the Unicode point for js/python/… (e.g. `\u0021`)
+- &lt;kbd&gt;Option&lt;/kbd&gt;&lt;kbd&gt;Cmd&lt;/kbd&gt; - copy the Unicode point for PHP (e.g. `\u{0021}`)
+- &lt;kbd&gt;Ctrl&lt;/kbd&gt; - copy the hex value(e.g. `21`) 
+- &lt;kbd&gt;Option&lt;/kbd&gt;&lt;kbd&gt;Ctrl&lt;/kbd&gt; - copy the full code point (e.g. `0021`) 
+- Use Copy result (&lt;kbd&gt;Cmd&lt;/kbd&gt;+&lt;kbd&gt;C&lt;/kbd&gt;) to copy the character name (e.g. `exclamation mark`)
+
+↳ Result actions (except Copy result &lt;kbd&gt;Cmd&lt;/kbd&gt;+&lt;kbd&gt;C&lt;/kbd&gt;) also paste to the frontmost app
+
+### Tips
+
+- `utf u0027` - you can prefix the full codepoint with `u`, and the matcher will mostly match this to the character's json value (`\u0027`), which means you get "find a Unicode codepoint" function for free
+- `utf larr` - one of the fields matched are html entities - use this for a precise and quick matching
+- `utf :raw* query*` - if you prefix your query with a colon, you'll gain access to the underlying technology - and you get to write raw SQLite FTS5 Match Query. Use this power for good
 
 ## Installation
 
@@ -571,7 +584,7 @@ MIT License - see [LICENSE](./LICENSE)
 	<key>userconfigurationconfig</key>
 	<array/>
 	<key>version</key>
-	<string>2.0.3</string>
+	<string>2.1.0</string>
 	<key>webaddress</key>
 	<string>https://adamkiss.com</string>
 </dict>
