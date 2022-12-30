@@ -67,7 +67,7 @@ if [[ "$query" =~ ^! ]]; then
 	WITH found AS (
 		SELECT hex, codepoint, character, name, altname, category, html, json, user.usage.count
 		FROM main.characters
-		LEFT JOIN user.usage ON main.characters.hex = user.usage.id
+		LEFT JOIN user.usage ON cast(user.usage.id as text) = cast(characters.hex as text)
 		WHERE character = SUBSTR('$query', 2)
 		ORDER BY user.usage.count
 	)
@@ -129,7 +129,7 @@ fi
 	WITH found AS (
 		SELECT hex, codepoint, character, name, altname, category, html, json, user.usage.count
 		FROM main.characters('$query')
-		LEFT JOIN user.usage ON main.characters.hex = user.usage.id
+		LEFT JOIN user.usage ON cast(user.usage.id as text) = cast(characters.hex as text)
 		ORDER BY user.usage.count DESC, rank ASC, length(name) ASC
 		LIMIT 50
 	)

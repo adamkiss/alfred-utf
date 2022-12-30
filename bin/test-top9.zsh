@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS "usage" (
 WITH top AS (
 	SELECT id, count, hex, codepoint, character, name, altname, category, html, json
 	FROM main.usage
-	LEFT JOIN u.characters ON usage.id = characters.hex
+	LEFT JOIN u.characters ON cast(usage.id as text) = cast(characters.hex as text)
 	ORDER BY count DESC
 	LIMIT 9
 )
