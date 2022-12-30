@@ -151,7 +151,7 @@ cat &lt;&lt; HELP
 		},
 		{
 			"title": "🥩 \`utf :&lt;query&gt;\`",
-			"autocomplete": ":sea* OR chat*",
+			"autocomplete": ":sea* AND Other*",
 			"subtitle": "Start query with a colon to use raw SQLite FTS5 Match syntax (the underlying technology)",
 			"valid": false
 		},
