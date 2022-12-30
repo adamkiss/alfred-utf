@@ -212,7 +212,7 @@ if [[ "$query" =~ ^! ]]; then
 						'arg', hex,
 						'subtitle', 'Copy &amp; paste hex → "' || hex || '"'
 					),
-					'ctrl+cmd', JSON_OBJECT(
+					'ctrl+option', JSON_OBJECT(
 						'arg', codepoint,
 						'subtitle', 'Copy &amp; paste full codepoint → "' || codepoint || '"'
 					)
@@ -274,7 +274,7 @@ fi
 						'arg', hex,
 						'subtitle', 'Copy &amp; paste hex → "' || hex || '"'
 					),
-					'ctrl+cmd', JSON_OBJECT(
+					'ctrl+option', JSON_OBJECT(
 						'arg', codepoint,
 						'subtitle', 'Copy &amp; paste full codepoint → "' || codepoint || '"'
 					)
@@ -402,7 +402,7 @@ select IIF(
 						'arg', hex,
 						'subtitle', 'Copy &amp; paste hex → "' || hex || '"'
 					),
-					'ctrl+cmd', JSON_OBJECT(
+					'ctrl+option', JSON_OBJECT(
 						'arg', codepoint,
 						'subtitle', 'Copy &amp; paste full codepoint → "' || codepoint || '"'
 					)

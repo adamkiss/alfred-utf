@@ -97,7 +97,7 @@ if [[ "$query" =~ ^! ]]; then
 						'arg', hex,
 						'subtitle', 'Copy & paste hex → "' || hex || '"'
 					),
-					'ctrl+cmd', JSON_OBJECT(
+					'ctrl+option', JSON_OBJECT(
 						'arg', codepoint,
 						'subtitle', 'Copy & paste full codepoint → "' || codepoint || '"'
 					)
@@ -159,7 +159,7 @@ fi
 						'arg', hex,
 						'subtitle', 'Copy & paste hex → "' || hex || '"'
 					),
-					'ctrl+cmd', JSON_OBJECT(
+					'ctrl+option', JSON_OBJECT(
 						'arg', codepoint,
 						'subtitle', 'Copy & paste full codepoint → "' || codepoint || '"'
 					)
