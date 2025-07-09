@@ -101,7 +101,7 @@
 				<key>escaping</key>
 				<integer>102</integer>
 				<key>keyword</key>
-				<string>utf</string>
+				<string>{var:workflow_trigger_search}</string>
 				<key>queuedelaycustom</key>
 				<integer>3</integer>
 				<key>queuedelayimmediatelyinitially</key>
@@ -343,7 +343,7 @@ SQL
 				<key>escaping</key>
 				<integer>102</integer>
 				<key>keyword</key>
-				<string>utf9</string>
+				<string>{var:workflow_trigger_top}</string>
 				<key>queuedelaycustom</key>
 				<integer>3</integer>
 				<key>queuedelayimmediatelyinitially</key>
@@ -582,7 +582,50 @@ MIT License - see [LICENSE](./LICENSE)
 		</dict>
 	</dict>
 	<key>userconfigurationconfig</key>
-	<array/>
+	<array>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>default</key>
+				<string>utf</string>
+				<key>placeholder</key>
+				<string>utf</string>
+				<key>required</key>
+				<true/>
+				<key>trim</key>
+				<true/>
+			</dict>
+			<key>description</key>
+			<string>Opens the workflow</string>
+			<key>label</key>
+			<string>Trigger UTF Search</string>
+			<key>type</key>
+			<string>textfield</string>
+			<key>variable</key>
+			<string>workflow_trigger_search</string>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>default</key>
+				<string>utf9</string>
+				<key>placeholder</key>
+				<string></string>
+				<key>required</key>
+				<true/>
+				<key>trim</key>
+				<true/>
+			</dict>
+			<key>description</key>
+			<string>Opens the top 9 most used characters</string>
+			<key>label</key>
+			<string>Trigger Top 9 characters list</string>
+			<key>type</key>
+			<string>textfield</string>
+			<key>variable</key>
+			<string>workflow_trigger_top</string>
+		</dict>
+	</array>
 	<key>version</key>
 	<string>2.1.0</string>
 	<key>webaddress</key>
