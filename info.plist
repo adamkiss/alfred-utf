@@ -116,10 +116,11 @@
 				<string>#!/usr/bin/env zsh
 
 # trim and collapse whitespace - source: https://stackoverflow.com/a/40962059
-query=`echo $1 | xargs`
+query=`echo "$1" | xargs`
 
 # prepare the user database (it must exist)
-/usr/bin/sqlite3 -init /dev/null user.sqlite3 &lt;&lt;INIT
+mkdir -p "${alfred_workflow_data}"
+/usr/bin/sqlite3 -init /dev/null "${alfred_workflow_data}/user.sqlite3" &lt;&lt;INIT
 CREATE TABLE IF NOT EXISTS "usage" (
 	"id" string UNIQUE NOT NULL,
 	"count" integer NOT NULL DEFAULT 1,
@@ -177,13 +178,13 @@ fi
 # query starts with !, it's a "give me character X query"
 if [[ "$query" =~ ^! ]]; then
 /usr/bin/sqlite3 -init /dev/null unicode.sqlite3 &lt;&lt;SQL
-	ATTACH "./user.sqlite3" as user;
+	ATTACH "${alfred_workflow_data}/user.sqlite3" as user;
 	-- the query
 	WITH found AS (
 		SELECT hex, codepoint, character, name, altname, category, html, json, user.usage.count
 		FROM main.characters
 		LEFT JOIN user.usage ON cast(user.usage.id as text) = cast(characters.hex as text)
-		WHERE character = SUBSTR('$query', 2)
+		WHERE character IS SUBSTR('$query', 2)
 		ORDER BY user.usage.count
 	)
 	-- the formatter
@@ -239,7 +240,7 @@ else
 fi
 
 /usr/bin/sqlite3 -init /dev/null unicode.sqlite3 &lt;&lt;SQL
-	ATTACH "./user.sqlite3" as user;
+	ATTACH "${alfred_workflow_data}/user.sqlite3" as user;
 	-- the query
 	WITH found AS (
 		SELECT hex, codepoint, character, name, altname, category, html, json, user.usage.count
@@ -357,8 +358,11 @@ SQL
 				<key>script</key>
 				<string>#!/usr/bin/env zsh
 
+# prepare the user database (it must exist)
+mkdir -p "${alfred_workflow_data}"
+
 # Load the top 9 and display the as alfred results
-/usr/bin/sqlite3 -init /dev/null user.sqlite3 &lt;&lt;EOF
+/usr/bin/sqlite3 -init /dev/null "${alfred_workflow_data}/user.sqlite3" &lt;&lt;EOF
 ATTACH "./unicode.sqlite3" as u;
 CREATE TABLE IF NOT EXISTS "usage" (
 	"id" string UNIQUE NOT NULL,
@@ -456,7 +460,10 @@ EOF</string>
 				<key>script</key>
 				<string>#!/usr/bin/env zsh
 
-/usr/bin/sqlite3 -init /dev/null user.sqlite3 &lt;&lt;EOF
+# prepare the user database folder (it must exist)
+mkdir -p "${alfred_workflow_data}"
+
+/usr/bin/sqlite3 -init /dev/null "${alfred_workflow_data}/user.sqlite3" &lt;&lt;EOF
     CREATE TABLE IF NOT EXISTS "usage" (
         "id" string UNIQUE NOT NULL,
         "count" integer NOT NULL DEFAULT 1,
@@ -564,7 +571,7 @@ MIT License - see [LICENSE](./LICENSE)
 			<key>xpos</key>
 			<real>45</real>
 			<key>ypos</key>
-			<real>45</real>
+			<real>40</real>
 		</dict>
 		<key>7DF89816-12DA-4CDA-94E6-9998DD052287</key>
 		<dict>
