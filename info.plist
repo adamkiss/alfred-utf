@@ -119,7 +119,7 @@
 query=`echo $1 | xargs`
 
 # prepare the user database (it must exist)
-/usr/bin/sqlite3 user.sqlite3 &lt;&lt;INIT
+/usr/bin/sqlite3 -init /dev/null user.sqlite3 &lt;&lt;INIT
 CREATE TABLE IF NOT EXISTS "usage" (
 	"id" string UNIQUE NOT NULL,
 	"count" integer NOT NULL DEFAULT 1,
@@ -176,7 +176,7 @@ fi
 # CASE: give me character
 # query starts with !, it's a "give me character X query"
 if [[ "$query" =~ ^! ]]; then
-/usr/bin/sqlite3 unicode.sqlite3 &lt;&lt;SQL
+/usr/bin/sqlite3 -init /dev/null unicode.sqlite3 &lt;&lt;SQL
 	ATTACH "./user.sqlite3" as user;
 	-- the query
 	WITH found AS (
@@ -238,7 +238,7 @@ else
 	query="${query#*':'}"
 fi
 
-/usr/bin/sqlite3 unicode.sqlite3 &lt;&lt;SQL
+/usr/bin/sqlite3 -init /dev/null unicode.sqlite3 &lt;&lt;SQL
 	ATTACH "./user.sqlite3" as user;
 	-- the query
 	WITH found AS (
@@ -358,7 +358,7 @@ SQL
 				<string>#!/usr/bin/env zsh
 
 # Load the top 9 and display the as alfred results
-/usr/bin/sqlite3 user.sqlite3 &lt;&lt;EOF
+/usr/bin/sqlite3 -init /dev/null user.sqlite3 &lt;&lt;EOF
 ATTACH "./unicode.sqlite3" as u;
 CREATE TABLE IF NOT EXISTS "usage" (
 	"id" string UNIQUE NOT NULL,
@@ -456,7 +456,7 @@ EOF</string>
 				<key>script</key>
 				<string>#!/usr/bin/env zsh
 
-/usr/bin/sqlite3 user.sqlite3 &lt;&lt;EOF
+/usr/bin/sqlite3 -init /dev/null user.sqlite3 &lt;&lt;EOF
     CREATE TABLE IF NOT EXISTS "usage" (
         "id" string UNIQUE NOT NULL,
         "count" integer NOT NULL DEFAULT 1,
